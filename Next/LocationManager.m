@@ -46,6 +46,7 @@
                                                       otherButtonTitles:nil, nil];
             [alertView show];
             
+            
             NSLog(@"Location services turned of by user");
         }
     }
@@ -82,12 +83,27 @@
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location access denied"
-                                                            message:@"Please open this app's settings and allow location access 'While Using the app'."
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                                  otherButtonTitles:@"Settings", nil];
-        [alertView show];
+
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Location access denied"
+                                                                                 message:@"Please open this app's settings and allow location access 'While Using the app'."
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [alertController dismissViewControllerAnimated:YES completion:nil];
+                                                             }];
+        
+        UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:@"Settings"
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction *action) {
+                                                                   [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                               }];
+        
+        [alertController addAction:cancelAction];
+        [alertController addAction:settingsAction];
+
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -95,27 +111,25 @@
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error retreiving location"
-                                                        message:[error localizedDescription]
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:nil, nil];
-    [alertView show];
+    if (error.code == kCLErrorDenied) {
+        [self stopUpdatingLocation];
+    } else {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Location retreiving error"
+                                                                                 message:@"Please check your network connection or that you are not in airplane mode!"
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *retryAction = [UIAlertAction actionWithTitle:@"Retry"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [alertController dismissViewControllerAnimated:YES completion:nil];
+                                                                  }];
+        
+        [alertController addAction:retryAction];
 
-}
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
 
-
-
-#pragma mark - UIAlertView delegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        // Settings button pressed, redirect user to Apps settings UIApplicationOpenSettingsURLString
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }
 }
-
 
 
 
