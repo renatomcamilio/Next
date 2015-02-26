@@ -12,7 +12,7 @@
 @implementation Time
 
 
--(NSString*)partOfWeek {
++(NSString*)partOfWeek {
     
     NSString * partOfWeek;
     
@@ -27,11 +27,11 @@
     
     if ([dayString isEqualToString:@"Friday"]||[dayString isEqualToString:@"Saturday"]||[dayString  isEqualToString:@"Sunday"]) {
         
-        partOfWeek=@"Weekend";
+        partOfWeek=@"weekend";
         
     }else {
         
-      partOfWeek = @"Weekday";
+      partOfWeek = @"weekday";
         
     }
     
@@ -39,7 +39,7 @@
     
 }
 
--(NSString*)sectionOfDay {
++(NSString*)sectionOfDay {
     
     NSString * timeZone;
     
@@ -53,23 +53,13 @@
     
     NSInteger timeValue = [timeString integerValue];
     
-    if (timeValue>5 && timeValue<11) {
+    if (timeValue>=5 && timeValue<17) {
         
         timeZone = @"morning";
         
-    } else if (timeValue>=11 && timeValue<17) {
+    } else {
         
-        timeZone = @"noon";
-        
-    }else if (timeValue>=17 && timeValue<20) {
-        
-      timeZone = @"evening";
-        
-        
-    }else if (timeValue>=20 && timeValue<=24){
-    
-    timeZone = @"lateNight";
-    
+        timeZone = @"night";
     }
 
     return timeZone;

@@ -7,6 +7,10 @@
 //
 
 #import "ViewController.h"
+#import "LocationManager.h"
+#import "WeatherAPIMannager.h"
+#import "Weather.h"
+#import "SugestionCalculator.h"
 #import "Time.h"
 
 @interface ViewController ()
@@ -21,12 +25,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //test
+    self.locationManager = [LocationManager sharedInstance];
+    [self.locationManager startUpdatingLocation];
+    
+    self.weatherManager = [WeatherAPIMannager sharedInstance];
+    [self.weatherManager getWheatherDescriptionForLocation:self.locationManager.currentLocation completion:^(Weather *weather) {
+        self.currentWeather = weather;        
+        
+        NSLog(@"main: %@, description: %@", self.currentWeather.mainDescription, self.currentWeather.detailDescription);
+        
+    }];
 
 
-    
-    
-    
-    // Do any additional setup after loading the view, typically from a nib.
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,16 +48,16 @@
 
 - (IBAction)weatherTest:(id)sender {
     
-//    __weak __typeof(&*self) weakSelf = self;
-//    [self.weatherManager getWheatherDescriptionForLocation:self.locationManager.currentLocation completion:^(Weather *weather) {
-//        self.currentWeather = weather;
-//        self.descriptionLabel.text = self.currentWeather.detailDescription;
-//        
-//        
-//        NSLog(@"main: %@, description: %@", self.currentWeather.mainDescription, self.currentWeather.detailDescription);
-//
-//    }];
+    SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc]init];
+    NSString * partOfWeek = [Time partOfWeek];
+    NSString * sectionOfDay = [Time sectionOfDay];
     
+    [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.mainDescription];
+    NSLog(@"%@", self.currentWeather.mainDescription); 
+    
+    NSString * randomReccomendation = [sugestionCalculator randomRecomendedSection];
+    
+    self.descriptionLabel.text = randomReccomendation;
     
     
 }
