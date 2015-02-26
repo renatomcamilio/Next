@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface LocationManager : NSObject <CLLocationManagerDelegate, UIAlertViewDelegate>
+@interface LocationManager : NSObject <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentLocation;

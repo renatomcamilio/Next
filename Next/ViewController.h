@@ -10,6 +10,9 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+
+- (IBAction)weatherTest:(id)sender;
 
 @end
 
