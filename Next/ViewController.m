@@ -12,6 +12,7 @@
 #import "Weather.h"
 #import "SugestionCalculator.h"
 #import "Time.h"
+#import "FourSquareApiManager.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) Weather *currentWeather;
@@ -36,9 +37,7 @@
         NSLog(@"main: %@, description: %@", self.currentWeather.mainDescription, self.currentWeather.detailDescription);
         
     }];
-
-
-
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,6 +58,12 @@
     
     self.descriptionLabel.text = randomReccomendation;
     
+    
+    //foursquare api test
+    
+    FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
+    [foursquareApiManager getFoursquareObjectWithLocation:self.locationManager.currentLocation randomReccomendation:randomReccomendation];
+
     
 }
 @end

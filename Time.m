@@ -66,6 +66,23 @@
     
 }
 
++(NSString*)fourSquareVersionNumber {
+    
+    NSString * versionNumber;
+    
+    NSDate * versionNumberDate = [NSDate date];
+    
+    NSDateFormatter * dateFormatter = [[NSDateFormatter alloc]init];
+    
+    [dateFormatter setDateFormat:@"yyyyMMdd"];
+    
+    NSString * versionNumberString = [dateFormatter stringFromDate:versionNumberDate];
+
+    return versionNumberString;
+    
+}
+
+
 
 @end
 

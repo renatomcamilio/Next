@@ -24,7 +24,7 @@
 -(NSArray*)loadWeekendActivitiesClearWeather {
     //art, shops, coffee, outdoors, sights, trending, specials, topPicks
     
-    self.weekendActivitiesMorning = [NSArray arrayWithObjects:@"art",@"shops", @"coffee", @"outdoors", @"sights", @"trending", @"specials", @"topPicks" ,nil];
+    self.weekendActivitiesMorning = [NSArray arrayWithObjects:@"art",@"shops", @"coffee", @"outdoors", @"sights", @"specials", @"topPicks" ,nil];
     
     return self.weekendActivitiesClearWeather;
     
@@ -34,14 +34,14 @@
 -(NSArray*)loadweekendActivitiesNight {
   //drinks, trending, specials, coffee,
     
-    self.weekdayActivitiesNight = [NSArray arrayWithObjects:@"drinks",@"trending"@"specials",@"coffee", nil];
+    self.weekdayActivitiesNight = [NSArray arrayWithObjects:@"drinks",@"specials",@"coffee",@"art", nil];
     
     return self.weekendActivitiesNight;
 }
 -(NSArray*)loadweekdayActivitiesMorning{
    //coffee, topPicks, trending
     
-    self.weekdayActivitiesMorning = [NSArray arrayWithObjects:@"coffee",@"topPicks", @"trending", nil];
+    self.weekdayActivitiesMorning = [NSArray arrayWithObjects:@"coffee",@"topPicks", nil];
     
     return self.weekdayActivitiesMorning;
     
@@ -49,12 +49,11 @@
 -(NSArray*)loadweekdayActivitiesNight {
    //drinks, trending, specials, coffee
     
-    self.weekdayActivitiesNight = [NSArray arrayWithObjects:@"drinks",@"trending", @"specials", @"coffee", nil];
+    self.weekdayActivitiesNight = [NSArray arrayWithObjects:@"drinks", @"specials", @"coffee", nil];
     
     return self.weekdayActivitiesNight;
     
 }
-
 
 
 
