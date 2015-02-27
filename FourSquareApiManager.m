@@ -7,6 +7,7 @@
 //
 
 #import "FourSquareApiManager.h"
+#import "FoursquareObject.h"
 
 static NSString *const FoursquareBaseURLString = @"https://api.foursquare.com/v2/venues/";
 static NSString *const FoursquareClientIDString = @"AEMB5NXEBITYUKAGQLROMYCXWN4PNBHOS0YQXNALWXZDKFJE";
@@ -53,12 +54,30 @@ static NSString *const FoursquareLimit =@"5";
     parameters[@"ll"]= [NSString stringWithFormat:@"%f,%f", location.coordinate.latitude, location.coordinate.longitude];
     parameters[@"section"]= randomReccomendation;
     parameters[@"openNow"]= @1;//Boolean flag to only include venues that are open now
+    parameters[@"venuePhotos"]=@1; 
     
     [self GET:@"explore" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         
         NSDictionary * fourSquareDataDictionary = (NSDictionary*)responseObject;
         
-        NSLog(@"\n\n%@", fourSquareDataDictionary);
+        NSDictionary *responseDictionary = fourSquareDataDictionary[@"response"];
+        
+        NSArray *groupsDataArray = responseDictionary[@"groups"];
+        
+        NSDictionary * groupsDataDictionary = [groupsDataArray firstObject];
+        
+        NSArray * itemsDataArray = groupsDataDictionary[@"items"];
+    
+        NSDictionary *itemDictionary = [itemsDataArray firstObject];
+        
+        FoursquareObject * fourSquareObject = [[FoursquareObject alloc]initWithDictionary:itemDictionary];
+        
+        NSLog(@"%@", fourSquareObject); 
+        
+        
+//        NSLog(@"%@", [itemsDataArray objectAtIndex:0]);
+        
+//        NSLog(@"\n\n%@", fourSquareDataDictionary);
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"FAILURE TO RETRIEVE FOURSQAURE DICTIONARY DATA");
