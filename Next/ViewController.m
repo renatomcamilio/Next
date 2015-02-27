@@ -16,6 +16,8 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) Weather *currentWeather;
+@property (nonatomic, strong) NSMutableArray *fourSquareObjects;
+
 @property (nonatomic, strong) LocationManager *locationManager;
 @property (nonatomic, strong) WeatherAPIMannager *weatherManager;
 
@@ -31,12 +33,19 @@
     [self.locationManager startUpdatingLocation];
     
     self.weatherManager = [WeatherAPIMannager sharedInstance];
+    
+    
     [self.weatherManager getWheatherDescriptionForLocation:self.locationManager.currentLocation completion:^(Weather *weather) {
-        self.currentWeather = weather;        
-        
+        self.currentWeather = weather;
         NSLog(@"main: %@, description: %@", self.currentWeather.mainDescription, self.currentWeather.detailDescription);
-        
     }];
+    
+    
+    
+    
+    self.fourSquareObjects = [NSMutableArray array];
+    
+     
     
 }
 
@@ -62,8 +71,16 @@
     //foursquare api test
     
     FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
-    [foursquareApiManager getFoursquareObjectWithLocation:self.locationManager.currentLocation randomReccomendation:randomReccomendation];
+    [foursquareApiManager getFoursquareObjectWithLocation:self.locationManager.currentLocation randomReccomendation:randomReccomendation completion:^(FoursquareObject *fourSquareObject) {
+        
+        [self.fourSquareObjects addObject:fourSquareObject];
+        NSLog(@"%@", self.fourSquareObjects);
+    }];
+    
+    
+    
 
     
+
 }
 @end

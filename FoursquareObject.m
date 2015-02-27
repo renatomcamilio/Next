@@ -11,18 +11,6 @@
 @implementation FoursquareObject
 
 
-//NSString * name;
-//NSString * lat;
-//NSString * lon;
-//NSString * shortDescription
-//NSString * rating;
-//NSString * openingHours;
-//NSURL * photoUrl;
-//NSString * tip;
-
-
-
-
 -(instancetype)initWithDictionary:(NSDictionary*)dictionary {
     
     
@@ -58,12 +46,9 @@
         NSString * photoUrlString = [NSString stringWithFormat:@"%@%@%@", photoPrefix,photoResolution,photoSuffix];
         self.photoUrl = [NSURL URLWithString:photoUrlString];
         
-        
     }
-    
     return self;
 }
-
 
 
 @end

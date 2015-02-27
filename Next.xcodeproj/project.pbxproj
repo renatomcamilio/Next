@@ -44,10 +44,10 @@
 		8A007B471A9ECEA90050CAC1 /* SugestionCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SugestionCalculator.m; path = ../SugestionCalculator.m; sourceTree = "<group>"; };
 		8A007B4A1A9F9FC40050CAC1 /* Reccomendations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reccomendations.h; path = ../Reccomendations.h; sourceTree = "<group>"; };
 		8A007B4B1A9F9FC40050CAC1 /* Reccomendations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reccomendations.m; path = ../Reccomendations.m; sourceTree = "<group>"; };
-		8A007B4F1A9FE4E30050CAC1 /* FourSquareApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourSquareApiManager.h; sourceTree = "<group>"; };
-		8A007B501A9FE4E30050CAC1 /* FourSquareApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FourSquareApiManager.m; sourceTree = "<group>"; };
-		8A007B521AA0151B0050CAC1 /* FoursquareObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoursquareObject.h; sourceTree = "<group>"; };
-		8A007B531AA0151B0050CAC1 /* FoursquareObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoursquareObject.m; sourceTree = "<group>"; };
+		8A007B4F1A9FE4E30050CAC1 /* FourSquareApiManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FourSquareApiManager.h; path = ../FourSquareApiManager.h; sourceTree = "<group>"; };
+		8A007B501A9FE4E30050CAC1 /* FourSquareApiManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FourSquareApiManager.m; path = ../FourSquareApiManager.m; sourceTree = "<group>"; };
+		8A007B521AA0151B0050CAC1 /* FoursquareObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FoursquareObject.h; path = ../FoursquareObject.h; sourceTree = "<group>"; };
+		8A007B531AA0151B0050CAC1 /* FoursquareObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FoursquareObject.m; path = ../FoursquareObject.m; sourceTree = "<group>"; };
 		8A25F3F31A9D240400123BCF /* Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Time.h; path = ../Time.h; sourceTree = "<group>"; };
 		8A25F3F41A9D240400123BCF /* Time.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Time.m; path = ../Time.m; sourceTree = "<group>"; };
 		E009EDCF1A9E8D3D00C0FB18 /* WeatherAPIMannager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherAPIMannager.h; sourceTree = "<group>"; };
@@ -110,6 +110,8 @@
 				E009EDD01A9E8D3D00C0FB18 /* WeatherAPIMannager.m */,
 				E0E1FD551A9D2891004749AF /* LocationManager.h */,
 				E0E1FD561A9D2891004749AF /* LocationManager.m */,
+				8A007B4F1A9FE4E30050CAC1 /* FourSquareApiManager.h */,
+				8A007B501A9FE4E30050CAC1 /* FourSquareApiManager.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -123,6 +125,8 @@
 				E009EDD31A9ECFBE00C0FB18 /* Weather.m */,
 				8A007B4A1A9F9FC40050CAC1 /* Reccomendations.h */,
 				8A007B4B1A9F9FC40050CAC1 /* Reccomendations.m */,
+				8A007B521AA0151B0050CAC1 /* FoursquareObject.h */,
+				8A007B531AA0151B0050CAC1 /* FoursquareObject.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -148,10 +152,6 @@
 		E0B42DC91A9D0CA500413524 = {
 			isa = PBXGroup;
 			children = (
-				8A007B521AA0151B0050CAC1 /* FoursquareObject.h */,
-				8A007B531AA0151B0050CAC1 /* FoursquareObject.m */,
-				8A007B4F1A9FE4E30050CAC1 /* FourSquareApiManager.h */,
-				8A007B501A9FE4E30050CAC1 /* FourSquareApiManager.m */,
 				E0B42DD41A9D0CA500413524 /* Next */,
 				E0B42DEE1A9D0CA500413524 /* NextTests */,
 				E0B42DD31A9D0CA500413524 /* Products */,
@@ -262,6 +262,7 @@
 				TargetAttributes = {
 					E0B42DD11A9D0CA500413524 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = B2328STN6B;
 					};
 					E0B42DEA1A9D0CA500413524 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -479,9 +480,12 @@
 			baseConfigurationReference = 1DF3AE61F637FA1604C2B661 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Next/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -490,9 +494,12 @@
 			baseConfigurationReference = 21CDDBC7745EE5112619E765 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Next/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

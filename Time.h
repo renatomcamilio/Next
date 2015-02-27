@@ -14,6 +14,5 @@
 
 +(NSString*)sectionOfDay;
 
-+(NSString*)fourSquareVersionNumber; 
 
 @end

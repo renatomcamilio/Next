@@ -45,7 +45,7 @@ static NSString *const FoursquareLimit =@"5";
 }
 
 
--(void)getFoursquareObjectWithLocation:(CLLocation *)location randomReccomendation:(NSString*)randomReccomendation {
+-(void)getFoursquareObjectWithLocation:(CLLocation *)location randomReccomendation:(NSString*)randomReccomendation completion:(void (^)(FoursquareObject *))completion{
     
     NSMutableDictionary * parameters = [NSMutableDictionary dictionary];
     parameters[@"client_id"] = FoursquareClientIDString;
@@ -59,25 +59,28 @@ static NSString *const FoursquareLimit =@"5";
     [self GET:@"explore" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         
         NSDictionary * fourSquareDataDictionary = (NSDictionary*)responseObject;
-        
         NSDictionary *responseDictionary = fourSquareDataDictionary[@"response"];
         
         NSArray *groupsDataArray = responseDictionary[@"groups"];
-        
         NSDictionary * groupsDataDictionary = [groupsDataArray firstObject];
         
         NSArray * itemsDataArray = groupsDataDictionary[@"items"];
-    
-        NSDictionary *itemDictionary = [itemsDataArray firstObject];
+        
+        
+        int randomNumber = arc4random()%[itemsDataArray count];
+        NSDictionary *itemDictionary = [itemsDataArray objectAtIndex:randomNumber];
         
         FoursquareObject * fourSquareObject = [[FoursquareObject alloc]initWithDictionary:itemDictionary];
+        //NSLog(@"%@", fourSquareObject.name);
         
-        NSLog(@"%@", fourSquareObject); 
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(fourSquareObject);
+            }
+        });
         
         
-//        NSLog(@"%@", [itemsDataArray objectAtIndex:0]);
-        
-//        NSLog(@"\n\n%@", fourSquareDataDictionary);
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"FAILURE TO RETRIEVE FOURSQAURE DICTIONARY DATA");

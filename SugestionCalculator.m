@@ -38,7 +38,7 @@
     
         self.calculatedReccomendationArray = [reccomendation loadweekendActivitiesNight];
     
-}
+    }
 
 }
 
