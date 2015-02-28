@@ -22,7 +22,7 @@
         
         //short description
         NSArray * shortDescriptionArray = dictionary[@"venue"][@"categories"];
-        NSDictionary *shortDescriptionDictionary= [shortDescriptionArray firstObject];
+        NSDictionary *shortDescriptionDictionary = [shortDescriptionArray firstObject];
         self.shortDescription = shortDescriptionDictionary[@"shortName"];
     
         self.rating = dictionary[@"venue"][@"rating"];

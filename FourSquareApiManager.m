@@ -70,9 +70,7 @@ static NSString *const FoursquareLimit =@"5";
         int randomNumber = arc4random()%[itemsDataArray count];
         NSDictionary *itemDictionary = [itemsDataArray objectAtIndex:randomNumber];
         
-        FoursquareObject * fourSquareObject = [[FoursquareObject alloc]initWithDictionary:itemDictionary];
-        //NSLog(@"%@", fourSquareObject.name);
-        
+        FoursquareObject * fourSquareObject = [[FoursquareObject alloc] initWithDictionary:itemDictionary];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion) {
@@ -83,7 +81,7 @@ static NSString *const FoursquareLimit =@"5";
         
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog(@"FAILURE TO RETRIEVE FOURSQAURE DICTIONARY DATA");
+        NSLog(@"%@", [error userInfo]);
     }];
     
     

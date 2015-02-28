@@ -15,6 +15,7 @@
 #import "FourSquareApiManager.h"
 #import "MainCollectionViewCell.h"
 #import "FoursquareObject.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface MainCollectionViewController ()
 @property (nonatomic, strong) Weather *currentWeather;
@@ -22,159 +23,97 @@
 
 @end
 
-@implementation MainCollectionViewController 
-
-//static NSString * const reuseIdentifier = @"Cell";
+@implementation MainCollectionViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[LocationManager sharedInstance] startUpdatingLocation];
-    
      self.fourSquareObjects = [NSMutableArray array];
     
-    [[WeatherAPIMannager sharedInstance] getWheatherDescriptionForLocation:[LocationManager sharedInstance].currentLocation completion:^(Weather *weather) {
-        
-        self.currentWeather = weather;
-        
-        NSLog(@"newWeather: %@, description: %@", self.currentWeather.mainDescription , self.currentWeather.detailDescription);
-        
-        SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc]init];
-        NSString * partOfWeek = [Time partOfWeek];
-        NSString * sectionOfDay = [Time sectionOfDay];
-        
-        [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.mainDescription];
-        NSLog(@"%@", self.currentWeather.mainDescription);
-        
-        NSString * randomReccomendation = [sugestionCalculator randomRecomendedSection];
-        NSLog(@"Foursquare section: %@", randomReccomendation);
-        
-        // first foursquare object
-//        FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
-//        [foursquareApiManager getFoursquareObjectWithLocation:[LocationManager sharedInstance].currentLocation randomReccomendation:randomReccomendation completion:^(FoursquareObject *fourSquareObject) {
-//            
-//            [self.fourSquareObjects addObject:fourSquareObject];
-//            NSLog(@"%@", self.fourSquareObjects);
-////            dispatch_async(dispatch_get_main_queue(), ^{
-//                [self.collectionView reloadData];
-////            });
-//
-//        }];
-        
-    }];
+    // Start updating user's current location object
+    [[LocationManager sharedInstance] startUpdatingLocation];
     
-    for (int i = 0 ; i<10 ; i++) {
-        [self performSelector:@selector(loadFoursquareObjects) withObject:self afterDelay:5.0];
-    }
-
-//    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    // I want to know when the first userLocation object is available, so I can safelly call FourSquare API and Wheather API
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUpdatedLocation)
+                                                 name:@"updatedLocation"
+                                               object:[LocationManager sharedInstance]];
 }
 
-
--(void)loadFoursquareObjects {
-    
-    SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc]init];
-    NSString * partOfWeek = [Time partOfWeek];
-    NSString * sectionOfDay = [Time sectionOfDay];
-    
-    [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.mainDescription];
-    NSLog(@"%@", self.currentWeather.mainDescription);
-    
-    NSString * randomReccomendation = [sugestionCalculator randomRecomendedSection];
-    
+-(void)loadFoursquareObjectsForRandomRecommendation:(NSString *)randomRecommendation {
     //add foursquare objects to array
     FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
-    [foursquareApiManager getFoursquareObjectWithLocation:[LocationManager sharedInstance].currentLocation randomReccomendation:randomReccomendation completion:^(FoursquareObject *fourSquareObject) {
-        
+    [foursquareApiManager getFoursquareObjectWithLocation:[LocationManager sharedInstance].currentLocation randomReccomendation:randomRecommendation completion:^(FoursquareObject *fourSquareObject) {
         [self.fourSquareObjects addObject:fourSquareObject];
-        NSLog(@"%@", self.fourSquareObjects);
         
         [self.collectionView reloadData];
     }];
 }
 
-
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)handleRandomRecommendation {
+    NSString * partOfWeek = [Time partOfWeek];
+    NSString * sectionOfDay = [Time sectionOfDay];
+    
+    SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc] init];
+    [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.detailDescription];
+    
+    NSString *randomReccomendation = [sugestionCalculator randomRecomendedSection];
+    
+    [self loadFoursquareObjectsForRandomRecommendation:randomReccomendation];
 }
-*/
+
+- (void)handleUpdatedLocation {
+    // Remove handler so it stops calling for updates
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    // Now that I know the updated user location, I'll get the wheather info
+    [[WeatherAPIMannager sharedInstance]
+     getWheatherDescriptionForLocation:[LocationManager sharedInstance].currentLocation // Here I'm sure that now it has something there
+     completion:^(Weather *weather) {
+         self.currentWeather = weather;
+
+         [self handleRandomRecommendation];
+     }];
+}
 
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-
     return 1;
 }
 
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-
     return self.fourSquareObjects.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     MainCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
     
-    FoursquareObject * currentObject = self.fourSquareObjects[indexPath.row];
+    FoursquareObject *currentObject = self.fourSquareObjects[indexPath.row];
     
     cell.nameLabel.text = currentObject.name;
     cell.shortDescriptionLabel.text = currentObject.shortDescription;
-    cell.ratingLabel.text = currentObject.rating;
+    cell.ratingLabel.text = [currentObject.rating stringValue];
     
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSURL *imageUrl = currentObject.photoUrl;
-        
-        NSData * imageData = [NSData dataWithContentsOfURL:imageUrl];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            cell.imageView.image = [UIImage imageWithData:imageData];
-            //[self.collectionView reloadData];
-        });
-        
-        
-    });
+    // This code does exactly the same as the commented code down there
+    [cell.imageView setImageWithURL:currentObject.photoUrl];
+    
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        
+//        NSURL *imageUrl = currentObject.photoUrl;
+//        
+//        NSData * imageData = [NSData dataWithContentsOfURL:imageUrl];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            
+//            cell.imageView.image = [UIImage imageWithData:imageData];
+//            //[self.collectionView reloadData];
+//        });
+//        
+//        
+//    });
     
     return cell;
 }
-
-#pragma mark <UICollectionViewDelegate>
-
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
-*/
 
 @end
