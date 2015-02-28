@@ -262,10 +262,11 @@
 				TargetAttributes = {
 					E0B42DD11A9D0CA500413524 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = B2328STN6B;
+
 					};
 					E0B42DEA1A9D0CA500413524 = {
 						CreatedOnToolsVersion = 6.1.1;
+
 						TestTargetID = E0B42DD11A9D0CA500413524;
 					};
 				};
@@ -416,7 +417,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

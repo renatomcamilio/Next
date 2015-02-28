@@ -66,6 +66,13 @@
 
     }];
 
+
+    for (int i = 0 ; i<10 ; i++) {
+    
+    [self performSelector:@selector(weatherTest:) withObject:self afterDelay:1.0];
+    
+    }
+    
 }
 
 
@@ -74,6 +81,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 - (IBAction)weatherTest:(id)sender {
    
