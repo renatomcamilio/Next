@@ -34,7 +34,7 @@
 -(NSArray*)loadweekendActivitiesNight {
   //drinks, trending, specials, coffee,
     
-    self.weekdayActivitiesNight = [NSArray arrayWithObjects:@"drinks",@"specials",@"coffee",@"art", nil];
+    self.weekendActivitiesNight = [NSArray arrayWithObjects:@"drinks",@"specials",@"coffee",@"art", nil];
     
     return self.weekendActivitiesNight;
 }

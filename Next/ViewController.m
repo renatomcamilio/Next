@@ -34,20 +34,41 @@
     
     self.weatherManager = [WeatherAPIMannager sharedInstance];
     
-    
-    [self.weatherManager getWheatherDescriptionForLocation:self.locationManager.currentLocation completion:^(Weather *weather) {
-        self.currentWeather = weather;
-        NSLog(@"main: %@, description: %@", self.currentWeather.mainDescription, self.currentWeather.detailDescription);
-    }];
-    
-    
-    
-    
     self.fourSquareObjects = [NSMutableArray array];
     
-     
+
     
+    [[WeatherAPIMannager sharedInstance] getWheatherDescriptionForLocation:[LocationManager sharedInstance].currentLocation completion:^(Weather *weather) {
+        
+        self.currentWeather = weather;
+        
+        NSLog(@"newWeather: %@, description: %@", self.currentWeather.mainDescription , self.currentWeather.detailDescription);
+        self.descriptionLabel.text = self.currentWeather.mainDescription;
+     
+        
+        SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc]init];
+        NSString * partOfWeek = [Time partOfWeek];
+        NSString * sectionOfDay = [Time sectionOfDay];
+        
+        [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.mainDescription];
+        NSLog(@"%@", self.currentWeather.mainDescription);
+        
+        NSString * randomReccomendation = [sugestionCalculator randomRecomendedSection];
+        NSLog(@"Foursquare section: %@", randomReccomendation);
+     
+        // first foursquare object
+        FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
+        [foursquareApiManager getFoursquareObjectWithLocation:self.locationManager.currentLocation randomReccomendation:randomReccomendation completion:^(FoursquareObject *fourSquareObject) {
+            
+            [self.fourSquareObjects addObject:fourSquareObject];
+            NSLog(@"%@", self.fourSquareObjects);
+        }];
+
+    }];
+
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -55,32 +76,28 @@
 }
 
 - (IBAction)weatherTest:(id)sender {
-    
+   
     SugestionCalculator * sugestionCalculator = [[SugestionCalculator alloc]init];
     NSString * partOfWeek = [Time partOfWeek];
     NSString * sectionOfDay = [Time sectionOfDay];
     
     [sugestionCalculator calculateReccomendationArray:partOfWeek sectionOfDay:sectionOfDay mainWeather:self.currentWeather.mainDescription];
-    NSLog(@"%@", self.currentWeather.mainDescription); 
+    NSLog(@"%@", self.currentWeather.mainDescription);
     
     NSString * randomReccomendation = [sugestionCalculator randomRecomendedSection];
     
     self.descriptionLabel.text = randomReccomendation;
     
     
-    //foursquare api test
-    
+    //add foursquare objects to array
     FourSquareApiManager * foursquareApiManager= [FourSquareApiManager sharedInstance];
     [foursquareApiManager getFoursquareObjectWithLocation:self.locationManager.currentLocation randomReccomendation:randomReccomendation completion:^(FoursquareObject *fourSquareObject) {
         
         [self.fourSquareObjects addObject:fourSquareObject];
         NSLog(@"%@", self.fourSquareObjects);
     }];
-    
-    
-    
-
-    
-
+ 
 }
+
+
 @end
